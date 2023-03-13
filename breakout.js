@@ -15,10 +15,42 @@ let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
 
+const brickRows = 3;
+const brickColumns = 5;
+const brickWidth = 75;
+const brickHeight = 20;
+const brickPadding = 10;
+const brickOffsetTop = 30;
+const brickOffsetLeft = 30;
+
+const bricks = [];
+for (let c = 0; c < brickColumns; c++) {
+	bricks[c] = [];
+	for (let r = 0; r < brickRows; r++) {
+		bricks[c][r] = { x:0, y:0 };
+	}
+}
+
+function drawBricks() {
+	for (let c = 0; c < brickColumns; c++) {
+		for(let r = 0; r < brickRows; r++) {
+			const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+			const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+			bricks[c][r].x = brickX;
+			bricks[c][r].y = brickY;
+			ctx.beginPath();
+			ctx.rect(brickX, brickY, brickWidth, brickHeight);
+			ctx.fillStyle = "black";
+			ctx.fill();
+			ctx.closePath();
+		}
+	}
+}
+
 function drawBall() {
 	ctx.beginPath();
 	ctx.arc(x, y, ballRadius, 0, Math.PI * 2, false);
-	ctx.fillStyle = "#0095DD";
+	ctx.fillStyle = "black";
 	ctx.fill();
 	ctx.closePath();
 }
@@ -26,7 +58,7 @@ function drawBall() {
 function drawPaddle() {
 	ctx.beginPath();
 	ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-	ctx.fillStyle = "#0095DD";
+	ctx.fillStyle = "black";
 	ctx.fill();
 	ctx.closePath();
 }
@@ -41,11 +73,11 @@ function checkEdges() {
 		if (x > paddleX && x < paddleX + paddleWidth) {
 			dy = -dy;
 			// Make the ball go faster each time
-			dy -= 0.5;
+			dy -= 0.2;
 			if (dx < 0) {
-				dx -= 0.3;
+				dx -= 0.2;
 			} else {
-				dx += 0.3;
+				dx += 0.2;
 			}
 		} else {
 			alert("GAME OVER");
@@ -57,6 +89,7 @@ function checkEdges() {
 
 function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	drawBricks();
 	drawBall();
 	drawPaddle();
 	x += dx;

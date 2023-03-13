@@ -29,15 +29,29 @@ function drawPaddle() {
 	ctx.fillStyle = "#0095DD";
 	ctx.fill();
 	ctx.closePath();
-
 }
 
 function checkEdges() {
-	if (y + dy < ballRadius || y + dy > canvas.height - ballRadius) {
-		dy = -dy;
-	}
 	if (x + dx < ballRadius || x + dx > canvas.width - ballRadius) {
 		dx = -dx;
+	}
+	if (y + dy < ballRadius) {
+		dy = -dy;
+	} else if (y + dy > canvas.height - ballRadius) {
+		if (x > paddleX && x < paddleX + paddleWidth) {
+			dy = -dy;
+			// Make the ball go faster each time
+			dy -= 0.5;
+			if (dx < 0) {
+				dx -= 0.3;
+			} else {
+				dx += 0.3;
+			}
+		} else {
+			alert("GAME OVER");
+			document.location.reload();
+			clearInterval(interval); // Needed for Chrome to end game.
+		}
 	}
 }
 
@@ -76,4 +90,4 @@ function keyUpHandler(e) {
 }
 
 // Call the draw function every 10 milliseconds
-setInterval(draw, 10);
+const interval = setInterval(draw, 10);
